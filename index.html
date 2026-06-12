@@ -771,23 +771,29 @@
         }
 
         function renderPuzzle() {
-            puzzleGrid.innerHTML = '';
-            tiles = [];
+            // Crie os 9 blocos no DOM apenas na primeira inicialização
+            if (puzzleGrid.children.length === 0) {
+                for (let i = 0; i < 9; i++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'puzzle-tile';
+                    puzzleGrid.appendChild(tile);
+                }
+            }
 
+            tiles = [];
             currentState.forEach((piece, index) => {
-                const tile = document.createElement('div');
-                tile.className = 'puzzle-tile';
+                const tile = puzzleGrid.children[index];
+                tiles.push(tile);
 
                 if (piece === EMPTY_PIECE) {
                     tile.classList.add('empty');
-                    // No image: empty space is transparent until puzzle is solved
+                    tile.style.backgroundImage = '';
+                    tile.onclick = null;
                 } else {
+                    tile.classList.remove('empty');
                     tile.style.backgroundImage = `url('images/tile-${piece}.png')`;
                     tile.onclick = () => moveTile(index);
                 }
-
-                puzzleGrid.appendChild(tile);
-                tiles.push(tile);
             });
         }
 
